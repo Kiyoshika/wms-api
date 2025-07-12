@@ -60,7 +60,7 @@ spotless {
 
 flyway {
 	url = 'jdbc:postgresql://localhost:5432/wms'
-	user = 'wmsadmin'
+	user = 'admin'
 	password = 'admin'
 	locations = ['classpath:db/migration']
 }
