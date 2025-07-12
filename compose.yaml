@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:17'
+    environment:
+      - 'POSTGRES_DB=wms'
+      - 'POSTGRES_PASSWORD=admin'
+      - 'POSTGRES_USER=wmsadmin'
+    ports:
+      - "5432:5432"
