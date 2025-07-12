@@ -24,47 +24,53 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 @EnableMethodSecurity
 public class SecurityConfig implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    public SecurityConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  public SecurityConfig(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User findUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found.", username)));
-        return org.springframework.security.core.userdetails.User.withUsername(findUser.getUsername()).password(passwordEncoder().encode(findUser.getPassword())).roles(findUser.getRoles().toArray(new String[0])).build();
-    }
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User findUser =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(
+                () ->
+                    new UsernameNotFoundException(String.format("User '%s' not found.", username)));
+    return org.springframework.security.core.userdetails.User.withUsername(findUser.getUsername())
+        .password(passwordEncoder().encode(findUser.getPassword()))
+        .roles(findUser.getRoles().toArray(new String[0]))
+        .build();
+  }
 
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_ADMIN > ROLE_SUPER_USER > ROLE_USER";
-        roleHierarchy.setHierarchy(hierarchy);
-        return roleHierarchy;
-    }
+  @Bean
+  public RoleHierarchy roleHierarchy() {
+    RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+    String hierarchy = "ROLE_ADMIN > ROLE_SUPER_USER > ROLE_USER";
+    roleHierarchy.setHierarchy(hierarchy);
+    return roleHierarchy;
+  }
 
-    @Bean
-    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
-        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
-        expressionHandler.setRoleHierarchy(roleHierarchy());
-        return expressionHandler;
-    }
+  @Bean
+  public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
+    DefaultWebSecurityExpressionHandler expressionHandler =
+        new DefaultWebSecurityExpressionHandler();
+    expressionHandler.setRoleHierarchy(roleHierarchy());
+    return expressionHandler;
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(Customizer.withDefaults());
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+        .httpBasic(Customizer.withDefaults());
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

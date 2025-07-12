@@ -9,9 +9,10 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "location")
 public class Location {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private Boolean isActive;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  private String name;
+  private Boolean isActive;
 }
