@@ -6,7 +6,8 @@ An experimental project for fun to build a small-scale API that you may see with
 * (TODO) Create and manage bin locations
 * (TODO) Create and manage products
 * (TODO) Manage inventory
-* (TODO) Configure replenishment tasks
+* (TODO) Purchase Order service (vendor/inbound)
+* (TODO) Appointment service (inbound)
 * (TODO) Receiving service (inbound)
 * (TODO) Picking service (outbound)
 * (TODO) Replenishment service
